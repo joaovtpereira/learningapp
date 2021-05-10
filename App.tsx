@@ -4,7 +4,7 @@ import {SafeAreaView, Text} from 'react-native';
 function App() {
   return (
     <SafeAreaView>
-      <Text>Hello World</Text>
+      <Text>Hello World Eslint</Text>
     </SafeAreaView>
   );
 }
