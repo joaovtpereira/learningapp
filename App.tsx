@@ -1,21 +1,18 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
-import {TextInputMask} from 'react-native-masked-text';
 import {yupResolver} from '@hookform/resolvers/yup';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/Ionicons';
 import * as yup from 'yup';
 
-import {
-  Alert,
-  TouchableOpacity,
-  SafeAreaView,
-  Text,
-  TextInput,
-} from 'react-native';
+import {Input} from 'react-native-elements';
+import {Button} from 'react-native-elements';
+import {Alert, SafeAreaView} from 'react-native';
 
 interface DataFormProps {
   email: string;
-  number: string;
+  password: string;
 }
 
 const fieldValidationSchema = yup.object().shape({
@@ -23,7 +20,7 @@ const fieldValidationSchema = yup.object().shape({
     .string()
     .required('O email não pode ser vazio')
     .email('Digite um email válido'),
-  number: yup.string().required('A senha não pode ser vazia'),
+  password: yup.string().required('Campo senha obrigatório'),
 });
 
 function App() {
@@ -36,58 +33,87 @@ function App() {
     resolver: yupResolver(fieldValidationSchema),
   });
 
+  const [submitLoadingButton, setSubmitLoadingButton] = useState(false);
+  const [enableSecurityText, setEnableSecurityText] = useState(true);
+
   useEffect(() => {
     register('email');
-    register('number');
+    register('password');
   }, [register]);
 
-  function onSubmit({email, number}: DataFormProps) {
-    Alert.alert(email, number);
+  function onSubmit({email, password}: DataFormProps) {
+    setSubmitLoadingButton(true);
+    setTimeout(() => {
+      setSubmitLoadingButton(false);
+      Alert.alert(email, password);
+    }, 3000);
+  }
+
+  function handleEnableSecurityText() {
+    setEnableSecurityText(!enableSecurityText);
   }
 
   return (
-    <SafeAreaView>
-      <Text>Hello World Eslint</Text>
-      <TextInput
-        placeholder={'Digite seu email'}
-        onChangeText={text => setValue('email', text)}
-        keyboardType="email-address"
-        style={{
-          height: 60,
-          width: '90%',
-          backgroundColor: '#c1c1c1',
-          marginHorizontal: '5%',
-          marginTop: 16,
-        }}
-      />
+    <SafeAreaProvider>
+      <SafeAreaView>
+        <Input
+          placeholder="Digite seu email"
+          label="Email"
+          keyboardType="email-address"
+          onChangeText={text => setValue('email', text)}
+          errorMessage={errors?.email?.message}
+          leftIcon={{type: 'font-awesome', name: 'envelope-o'}}
+          inputContainerStyle={{
+            marginHorizontal: '5%',
+            width: '90%',
+          }}
+          labelStyle={{
+            marginHorizontal: '5%',
+            marginTop: 16,
+            width: '90%',
+          }}
+        />
 
-      {errors?.email && <Text>Deu ruim Email</Text>}
+        <Input
+          placeholder="Digite sua senha"
+          label="Senha"
+          secureTextEntry={enableSecurityText}
+          errorMessage={errors?.password?.message}
+          leftIcon={{type: 'ionicon', name: 'key-outline'}}
+          rightIcon={
+            <Icon
+              name={
+                enableSecurityText ? 'ios-eye-outline' : 'ios-eye-off-outline'
+              }
+              onPress={handleEnableSecurityText}
+              size={24}
+            />
+          }
+          onChangeText={text => setValue('password', text)}
+          inputContainerStyle={{
+            marginHorizontal: '5%',
+            width: '90%',
+          }}
+          labelStyle={{
+            marginHorizontal: '5%',
+            marginTop: 16,
+            width: '90%',
+          }}
+        />
 
-      <TextInputMask
-        placeholder={'Digite seu telefone'}
-        keyboardType="numeric"
-        options={{
-          maskType: 'BRL',
-          withDDD: true,
-          dddMask: '(99) ',
-        }}
-        onChangeText={text => setValue('number', text)}
-        type="cel-phone"
-        style={{
-          height: 60,
-          width: '90%',
-          backgroundColor: '#c1c1c1',
-          marginHorizontal: '5%',
-          marginTop: 16,
-        }}
-      />
-
-      {errors?.number && <Text>Número inválido</Text>}
-
-      <TouchableOpacity onPress={handleSubmit(onSubmit)}>
-        <Text>Continuar</Text>
-      </TouchableOpacity>
-    </SafeAreaView>
+        <Button
+          title="Continuar"
+          disabled={submitLoadingButton}
+          loading={submitLoadingButton}
+          loadingProps={{
+            size: 24,
+          }}
+          containerStyle={{width: '90%', marginHorizontal: '5%'}}
+          buttonStyle={{height: 56}}
+          onPress={handleSubmit(onSubmit)}
+        />
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
