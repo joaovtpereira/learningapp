@@ -3,10 +3,9 @@ import React, {useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import Icon from 'react-native-vector-icons/Ionicons';
 import * as yup from 'yup';
 
-import {Input} from 'react-native-elements';
+import Input from './App/Components/ReactNativeElements/Input';
 import {Button} from 'react-native-elements';
 import {Alert, SafeAreaView} from 'react-native';
 
@@ -34,7 +33,6 @@ function App() {
   });
 
   const [submitLoadingButton, setSubmitLoadingButton] = useState(false);
-  const [enableSecurityText, setEnableSecurityText] = useState(true);
 
   useEffect(() => {
     register('email');
@@ -49,56 +47,27 @@ function App() {
     }, 3000);
   }
 
-  function handleEnableSecurityText() {
-    setEnableSecurityText(!enableSecurityText);
-  }
-
   return (
     <SafeAreaProvider>
       <SafeAreaView>
         <Input
+          errorMessage={errors?.email?.message}
+          onChangeText={text => setValue('email', text)}
           placeholder="Digite seu email"
           label="Email"
           keyboardType="email-address"
-          onChangeText={text => setValue('email', text)}
-          errorMessage={errors?.email?.message}
-          leftIcon={{type: 'font-awesome', name: 'envelope-o'}}
-          inputContainerStyle={{
-            marginHorizontal: '5%',
-            width: '90%',
-          }}
-          labelStyle={{
-            marginHorizontal: '5%',
-            marginTop: 16,
-            width: '90%',
+          leftIcon={{
+            type: 'font-awesome',
+            name: 'envelope-o',
           }}
         />
 
         <Input
+          errorMessage={errors?.password?.message}
+          onChangeText={text => setValue('password', text)}
           placeholder="Digite sua senha"
           label="Senha"
-          secureTextEntry={enableSecurityText}
-          errorMessage={errors?.password?.message}
-          leftIcon={{type: 'ionicon', name: 'key-outline'}}
-          rightIcon={
-            <Icon
-              name={
-                enableSecurityText ? 'ios-eye-outline' : 'ios-eye-off-outline'
-              }
-              onPress={handleEnableSecurityText}
-              size={24}
-            />
-          }
-          onChangeText={text => setValue('password', text)}
-          inputContainerStyle={{
-            marginHorizontal: '5%',
-            width: '90%',
-          }}
-          labelStyle={{
-            marginHorizontal: '5%',
-            marginTop: 16,
-            width: '90%',
-          }}
+          securityField
         />
 
         <Button
