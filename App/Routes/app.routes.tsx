@@ -1,5 +1,3 @@
-// In App.js in a new project
-
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import SignIn from '../Containers/SignIn';
