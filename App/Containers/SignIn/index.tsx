@@ -5,17 +5,19 @@ import {Text} from 'react-native-elements';
 
 import {Button} from '../../Components/ReactNativeElements/Button';
 
-import LearningAppLogo from '../../Images/logo.png';
 import colors from '../../Theme/colors';
 
 import {Container, SafeAreaView, Logo, ButtonContainer} from './styles';
+import {LearningAppLogo} from '../../Components/CustomComponents/LearningAppLogo';
 
 function SignIn() {
   return (
     <SafeAreaProvider>
       <SafeAreaView>
         <Container>
-          <Logo source={LearningAppLogo} />
+          <Logo>
+            <LearningAppLogo width={200} heigth={200} />
+          </Logo>
           <ButtonContainer>
             <Button
               title="Sign In"

@@ -23,9 +23,8 @@ export const ButtonContainer = styled.View`
   margin-bottom: ${`${String(Dimensions.get('screen').height / 4)}px`};
 `;
 
-export const Logo = styled.Image`
-  width: 120px;
-  height: 120px;
-
+export const Logo = styled.View`
+  width: 100%;
+  align-items: center;
   margin-top: ${`${String(Dimensions.get('screen').height / 4)}px`};
 `;
