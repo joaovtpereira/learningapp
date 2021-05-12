@@ -62,29 +62,27 @@ function SignIn() {
     Animated.parallel([
       Animated.timing(modalSignInAnimated, {
         toValue: (Dimensions.get('screen').height / 4) * 3 * -1,
-        duration: 2000,
+        duration: 1000,
         useNativeDriver: true,
       }),
       Animated.timing(imageLogoAnimated, {
         toValue: -200,
-        duration: 2000,
+        duration: 1000,
         useNativeDriver: true,
       }),
-    ]).start(() => {
-      setSignInActivated(true);
-    });
+    ]).start();
   }
 
   function DownModal() {
     Animated.parallel([
       Animated.timing(modalSignInAnimated, {
         toValue: 0,
-        duration: 2000,
+        duration: 1000,
         useNativeDriver: true,
       }),
       Animated.timing(imageLogoAnimated, {
         toValue: 0,
-        duration: 2000,
+        duration: 1000,
         useNativeDriver: true,
       }),
     ]).start(() => {
@@ -189,6 +187,7 @@ function SignIn() {
                 title="Sign In"
                 fullWidth
                 onPress={() => {
+                  setSignInActivated(true);
                   UpModal();
                 }}
                 titleStyle={{color: colors.primary, fontWeight: 'bold'}}
