@@ -15,9 +15,25 @@ export const Container = styled.View`
   justify-content: space-between;
 `;
 
-export const FormSignin = styled.View`
+export const LineRow = styled.View`
+  flex-direction: row;
+  align-items: center;
   width: 100%;
-  height: ${`${String((Dimensions.get('screen').height / 4) * 3)}px`};
+
+  margin-top: 40px;
+  justify-content: space-between;
+`;
+
+export const Divider = styled.View`
+  height: 1px;
+  width: 40%;
+  background: ${colors.primary};
+`;
+
+export const FormSignin = styled.View`
+  flex: 1;
+  width: 100%;
+  height: ${`${String((Dimensions.get('screen').height / 5) * 3)}px`};
 `;
 
 export const ButtonContainer = styled.View`
@@ -25,5 +41,5 @@ export const ButtonContainer = styled.View`
   align-items: center;
   padding: 0 40px;
 
-  margin-bottom: ${`${String(Dimensions.get('screen').height / 4)}px`};
+  margin-bottom: ${`${String(Dimensions.get('screen').height / 5)}px`};
 `;
