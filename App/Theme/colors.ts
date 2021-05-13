@@ -5,6 +5,7 @@ const colors = {
   pink: '#FED9B7',
   red: '#F07167',
   blue: '#00AFB9',
+  input_color: '#86939e',
 };
 
 export default colors;

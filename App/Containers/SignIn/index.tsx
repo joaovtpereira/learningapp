@@ -21,6 +21,8 @@ function SignIn() {
   const imageLogoAnimated = useRef(new Animated.Value(0)).current;
 
   const [signInActivated, setSignInActivated] = useState(false);
+  const [upAnimationFinished, setUpAnimationFinished] = useState(false);
+  const [hasOpenModal, sethasOpenModal] = useState(false);
 
   function UpModal() {
     Animated.parallel([
@@ -34,7 +36,12 @@ function SignIn() {
         duration: 750,
         useNativeDriver: true,
       }),
-    ]).start();
+    ]).start(() => {
+      setUpAnimationFinished(true);
+      if (!hasOpenModal) {
+        sethasOpenModal(true);
+      }
+    });
   }
 
   function DownModal() {
@@ -50,6 +57,7 @@ function SignIn() {
         useNativeDriver: true,
       }),
     ]).start(() => {
+      setUpAnimationFinished(false);
       setSignInActivated(false);
     });
   }
@@ -78,6 +86,8 @@ function SignIn() {
           {signInActivated ? (
             <FormSignIn
               modalSignInAnimated={modalSignInAnimated}
+              animationFinished={upAnimationFinished}
+              hasOpen={hasOpenModal}
               DownModal={DownModal}
             />
           ) : (

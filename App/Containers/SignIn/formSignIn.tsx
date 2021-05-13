@@ -1,18 +1,24 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-native/no-inline-styles */
-import {yupResolver} from '@hookform/resolvers/yup';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
+
 import {useForm} from 'react-hook-form';
+import {yupResolver} from '@hookform/resolvers/yup';
 import {
   Alert,
   Animated,
+  BackHandler,
   Dimensions,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  TextInput,
 } from 'react-native';
-import {colors, Icon, SocialIcon, Text} from 'react-native-elements';
+import {Icon, SocialIcon, Text} from 'react-native-elements';
+
 import {Button} from '../../Components/ReactNativeElements/Button';
 import Input from '../../Components/ReactNativeElements/Input';
+import colors from '../../Theme/colors';
 
 import {Divider, FormSignin, LineRow} from './styles';
 import {fieldValidationSchema} from './utils';
@@ -24,10 +30,17 @@ interface DataFormProps {
 
 interface FormSignInProps {
   modalSignInAnimated: any;
+  animationFinished: boolean;
+  hasOpen: boolean;
   DownModal: () => void;
 }
 
-export function FormSignIn({modalSignInAnimated, DownModal}: FormSignInProps) {
+export function FormSignIn({
+  modalSignInAnimated,
+  animationFinished,
+  hasOpen,
+  DownModal,
+}: FormSignInProps) {
   const {
     register,
     setValue,
@@ -36,12 +49,34 @@ export function FormSignIn({modalSignInAnimated, DownModal}: FormSignInProps) {
   } = useForm({
     resolver: yupResolver(fieldValidationSchema),
   });
+  const emailInputRef = useRef<TextInput>();
+
   const [submitLoadingButton, setSubmitLoadingButton] = useState(false);
+  const [emailInputOnFocus, setEmailInputOnFocus] = useState(false);
+  const [passwordInputOnFocus, setPasswordInputOnFocus] = useState(false);
 
   useEffect(() => {
     register('email');
     register('password');
   }, [register]);
+
+  useEffect(() => {
+    if (animationFinished === true && hasOpen === false) {
+      if (emailInputRef.current !== (null || undefined)) {
+        emailInputRef.current.focus();
+      }
+    }
+  }, [animationFinished, hasOpen]);
+
+  Keyboard.addListener('keyboardDidHide', () => {
+    setEmailInputOnFocus(false);
+    setPasswordInputOnFocus(false);
+  });
+
+  BackHandler.addEventListener('hardwareBackPress', () => {
+    DownModal();
+    return true;
+  });
 
   function onSubmit({email, password}: DataFormProps) {
     setSubmitLoadingButton(true);
@@ -51,6 +86,7 @@ export function FormSignIn({modalSignInAnimated, DownModal}: FormSignInProps) {
       Alert.alert(email, password);
     }, 3000);
   }
+
   return (
     <FormSignin>
       <KeyboardAvoidingView
@@ -101,12 +137,19 @@ export function FormSignIn({modalSignInAnimated, DownModal}: FormSignInProps) {
               type: 'font-awesome',
               name: 'envelope-o',
             }}
+            ref={emailInputRef}
+            focus={emailInputOnFocus}
+            onBlur={() => setEmailInputOnFocus(false)}
+            onFocus={() => setEmailInputOnFocus(true)}
           />
           <Input
             errorMessage={errors?.password?.message}
             onChangeText={text => setValue('password', text)}
             placeholder="Digite sua senha"
             label="Senha"
+            focus={passwordInputOnFocus}
+            onBlur={() => setPasswordInputOnFocus(false)}
+            onFocus={() => setPasswordInputOnFocus(true)}
             securityField
           />
           <Button
