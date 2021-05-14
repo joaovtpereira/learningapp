@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">LearninApp</string>
+    <string name="app_name">LearningApp</string>
+    <string name="facebook_app_id">817172429175939</string>
 </resources>

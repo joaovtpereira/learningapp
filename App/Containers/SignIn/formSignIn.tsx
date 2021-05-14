@@ -22,6 +22,7 @@ import colors from '../../Theme/colors';
 
 import {Divider, FormSignin, LineRow} from './styles';
 import {fieldValidationSchema} from './utils';
+import * as facebook from '../../services/facebook';
 
 interface DataFormProps {
   email: string;
@@ -86,6 +87,20 @@ export function FormSignIn({
       setSubmitLoadingButton(false);
       Alert.alert(email, password);
     }, 3000);
+  }
+
+  function loginFacebook() {
+    Keyboard.dismiss();
+    const facebookLogin = facebook.logInWithReadPermissions();
+
+    facebookLogin.then(result => {
+      if (!result.isCancelled) {
+        const userInfo = facebook.getUserInformation();
+        console.log(userInfo);
+      } else {
+        Alert.alert('Erro ao entrar logar');
+      }
+    });
   }
 
   return (
@@ -213,6 +228,7 @@ export function FormSignIn({
               button={false}
               iconColor="#fff"
               iconSize={24}
+              onPress={loginFacebook}
             />
 
             <SocialIcon
