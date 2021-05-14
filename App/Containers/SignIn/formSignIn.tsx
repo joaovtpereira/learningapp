@@ -50,6 +50,7 @@ export function FormSignIn({
     resolver: yupResolver(fieldValidationSchema),
   });
   const emailInputRef = useRef<TextInput>();
+  const passwordInputRef = useRef<TextInput>();
 
   const [submitLoadingButton, setSubmitLoadingButton] = useState(false);
   const [emailInputOnFocus, setEmailInputOnFocus] = useState(false);
@@ -124,33 +125,45 @@ export function FormSignIn({
             }}
           />
           <Input
+            ref={emailInputRef}
             containerStyle={{
               marginTop: 24,
               width: '100%',
             }}
+            autoCapitalize="none"
+            autoCompleteType="email"
+            keyboardType="default"
+            blurOnSubmit={false}
             errorMessage={errors?.email?.message}
-            onChangeText={text => setValue('email', text)}
+            onChangeText={text => setValue('email', text.trimRight())}
             placeholder="Digite seu email"
             label="Email"
-            keyboardType="default"
             leftIcon={{
               type: 'font-awesome',
               name: 'envelope-o',
             }}
-            ref={emailInputRef}
             focus={emailInputOnFocus}
             onBlur={() => setEmailInputOnFocus(false)}
             onFocus={() => setEmailInputOnFocus(true)}
+            returnKeyType="next"
+            onSubmitEditing={() => {
+              setEmailInputOnFocus(false);
+              setPasswordInputOnFocus(true);
+              passwordInputRef.current?.focus();
+            }}
           />
           <Input
+            ref={passwordInputRef}
             errorMessage={errors?.password?.message}
-            onChangeText={text => setValue('password', text)}
+            onChangeText={text => setValue('password', text.trimRight())}
             placeholder="Digite sua senha"
             label="Senha"
             focus={passwordInputOnFocus}
             onBlur={() => setPasswordInputOnFocus(false)}
             onFocus={() => setPasswordInputOnFocus(true)}
+            returnKeyType="send"
             securityField
+            onSubmitEditing={handleSubmit(onSubmit)}
           />
           <Button
             title="login"
