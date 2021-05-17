@@ -23,6 +23,8 @@ import colors from '../../Theme/colors';
 import {Divider, FormSignin, LineRow} from './styles';
 import {fieldValidationSchema} from './utils';
 import * as facebook from '../../services/facebook';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import * as google from '../../services/google';
 
 interface DataFormProps {
   email: string;
@@ -101,6 +103,24 @@ export function FormSignIn({
         Alert.alert('Erro ao entrar logar');
       }
     });
+  }
+
+  async function loginGoogle() {
+    Keyboard.dismiss();
+    try {
+      await GoogleSignin.hasPlayServices();
+      google.configuration();
+      GoogleSignin.signIn()
+        .then(response => {
+          const user = response.user;
+          console.log({user});
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -249,6 +269,7 @@ export function FormSignIn({
               button={false}
               iconColor="#fff"
               iconSize={24}
+              onPress={loginGoogle}
             />
           </LineRow>
         </Animated.View>
